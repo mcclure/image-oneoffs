@@ -11,7 +11,7 @@ extern int stbi_write_png(char const *filename, int w, int h, int comp, const vo
 
 int main (int argc, const char * argv[]) {
     if (argc < 3) {
-		fprintf(stderr, "Usage:\n\t%s inimage.png outimage.png\n", argv[0]);
+		fprintf(stderr, "Usage:\n\t%s infile.png outfile.png\n", argv[0]);
 		return 1;
 	}
 	

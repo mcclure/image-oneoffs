@@ -32,6 +32,7 @@
 		44E307EF19B57E92007DCBBC /* stb_image_write_bad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stb_image_write_bad.cpp; sourceTree = "<group>"; };
 		44E307F119B57E92007DCBBC /* stb_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stb_image.cpp; sourceTree = "<group>"; };
 		44E307F719B57FBD007DCBBC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		44E3087C19B58918007DCBBC /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* badpng */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = badpng; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859EA3029092ED04C91782 /* badpng.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = badpng.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,6 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				08FB7795FE84155DC02AAC07 /* Source */,
+				44E3086719B5883E007DCBBC /* Non-product */,
 				C6859EA2029092E104C91782 /* Documentation */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -83,6 +85,14 @@
 				8DD76FA10486AA7600D96B5E /* badpng */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		44E3086719B5883E007DCBBC /* Non-product */ = {
+			isa = PBXGroup;
+			children = (
+				44E3087C19B58918007DCBBC /* Makefile */,
+			);
+			name = "Non-product";
 			sourceTree = "<group>";
 		};
 		C6859EA2029092E104C91782 /* Documentation */ = {
