@@ -1,0 +1,10 @@
+Tool incorrectly re-encodes a PNG.
+
+To build:
+	make
+
+Usage:
+	./badpng infile.png outfile.png
+
+Written by Andi McClure <andi.m.mcclure@gmail.com>
+The source code in this repository may be used for any purpose without restriction.
