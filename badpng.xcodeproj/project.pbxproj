@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8DD76F9A0486AA7600D96B5E /* badpng.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* badpng.m */; settings = {ATTRIBUTES = (); }; };
+		44E307F219B57E92007DCBBC /* stb_image_write_bad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E307EF19B57E92007DCBBC /* stb_image_write_bad.cpp */; };
+		44E307F419B57E92007DCBBC /* stb_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E307F119B57E92007DCBBC /* stb_image.cpp */; };
+		44E307F819B57FBD007DCBBC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E307F719B57FBD007DCBBC /* main.cpp */; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 		8DD76F9F0486AA7600D96B5E /* badpng.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859EA3029092ED04C91782 /* badpng.1 */; };
 /* End PBXBuildFile section */
@@ -26,9 +28,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08FB7796FE84155DC02AAC07 /* badpng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = badpng.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		32A70AAB03705E1F00C91783 /* badpng_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = badpng_Prefix.pch; sourceTree = "<group>"; };
+		44E307EF19B57E92007DCBBC /* stb_image_write_bad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stb_image_write_bad.cpp; sourceTree = "<group>"; };
+		44E307F119B57E92007DCBBC /* stb_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stb_image.cpp; sourceTree = "<group>"; };
+		44E307F719B57FBD007DCBBC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* badpng */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = badpng; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859EA3029092ED04C91782 /* badpng.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = badpng.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,8 +62,9 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				32A70AAB03705E1F00C91783 /* badpng_Prefix.pch */,
-				08FB7796FE84155DC02AAC07 /* badpng.m */,
+				44E307F719B57FBD007DCBBC /* main.cpp */,
+				44E307EF19B57E92007DCBBC /* stb_image_write_bad.cpp */,
+				44E307F119B57E92007DCBBC /* stb_image.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -139,7 +143,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DD76F9A0486AA7600D96B5E /* badpng.m in Sources */,
+				44E307F219B57E92007DCBBC /* stb_image_write_bad.cpp in Sources */,
+				44E307F419B57E92007DCBBC /* stb_image.cpp in Sources */,
+				44E307F819B57FBD007DCBBC /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,7 +175,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = badpng_Prefix.pch;
+				GCC_PREFIX_HEADER = "";
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = badpng;
 			};
