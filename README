@@ -3,6 +3,9 @@ Tool incorrectly re-encodes a PNG.
 To build:
 	make
 
+To build for debugging:
+	make DEBUG=1
+
 Usage:
 	./badpng infile.png outfile.png
 

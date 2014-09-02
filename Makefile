@@ -1,4 +1,8 @@
-BUILD=g++
+CXX ?= g++
+ifneq (,$(DEBUG))
+CXXFLAGS:=$(CXXFLAGS) -g
+endif
+BUILD = $(CXX) $(CXXFLAGS)
 
 all: main.cpp stb_image_write_bad.cpp stb_image.cpp
 	$(BUILD) -c main.cpp
