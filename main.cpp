@@ -14,27 +14,22 @@ extern int stbi_write_png(char const *filename, int w, int h, int comp, const vo
 // To produce the effect, we take three steps:
 
 // 1. Pad the image with one row of black pixels, since the glitched encoder commits a memory access violation.
-#define SAFE 1
+#define SAFE 0
 
 // 2. Manually reverse the order of the pixel rows, so the flipped image looks right side up.
-#define PREFLIP 1
+#define PREFLIP 0
 
 // 3. Instruct the encoder to run its broken y-flip routine.
-#define YFLIP 1
+#define YFLIP 0
 
 int main (int argc, const char * argv[]) {
-    if (argc < 3) {
-		fprintf(stderr, "Usage:\n\t%s infile.png outfile.png\n", argv[0]);
+    if (argc < 4) {
+		fprintf(stderr, "Usage:\n\t%s outfile.png x y randmask blackmask\n", argv[0]);
 		return 1;
 	}
 	
-	int iwidth, iheight;
-	uint32_t *image = (uint32_t *)stbi_load(argv[1], &iwidth, &iheight, NULL, 4);
-
-	if (!image) {
-		fprintf(stderr, "Could not open image %s\n", argv[1]);
-		return 1;
-	}
+	int iwidth = atoi(argv[2]), iheight = atoi(argv[3]), randmask = argc<5?0:atoi(argv[4]), blackmask = argc<6?0:atoi(argv[5]);
+	uint32_t *image = (uint32_t *)malloc(iwidth*iheight*sizeof(uint32_t));
 
 #if SAFE
 	uint32_t *oldimage = image;
@@ -57,7 +52,25 @@ int main (int argc, const char * argv[]) {
 	}
 #endif
 
-	stbi_write_png(argv[2], iwidth, iheight, 4, &image[0], 4*iwidth, YFLIP);
+	for(int y = 0; y < iheight; y++) {
+		for(int x = 0; x < iwidth; x++) {
+			int c = x+y*iwidth;
+			unsigned char *color = (unsigned char *)&image[c];
+			unsigned char basic = arc4random_uniform(256);
+
+			for (int ch = 0; ch < 3; ch++) {
+				if (randmask&(1<<ch))
+					color[ch] = arc4random_uniform(256);
+				else if (blackmask&(1<<ch))
+					color[ch] = basic;
+				else
+					color[ch] = 0;
+			}
+			color[3] = 255;
+		}
+	}
+
+	stbi_write_png(argv[1], iwidth, iheight, 4, &image[0], 4*iwidth, YFLIP);
 	
 	return 0;
 }
