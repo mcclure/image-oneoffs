@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <algorithm>
 
 extern "C" {
 unsigned char *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp);
@@ -22,50 +24,45 @@ extern int stbi_write_png(char const *filename, int w, int h, int comp, const vo
 // 3. Instruct the encoder to run its broken y-flip routine.
 #define YFLIP 0
 
+double clamp(double low, double v, double high) {
+	return std::min(std::max(v, low), high);
+}
+
+uint8_t gray(double v) {
+	return clamp(0, v, 1) * 255 + 0.5;
+}
+
+double sqr(double x) {
+	return x * x;
+}
+
 int main (int argc, const char * argv[]) {
-    if (argc < 4) {
-		fprintf(stderr, "Usage:\n\t%s outfile.png x y randmask blackmask\n", argv[0]);
+    if (argc < 3) {
+		fprintf(stderr, "Usage:\n\t%s outfile.png x y scale\n", argv[0]);
 		return 1;
 	}
+
+	char *_;
 	
-	int iwidth = atoi(argv[2]), iheight = atoi(argv[3]), randmask = argc<5?0:atoi(argv[4]), blackmask = argc<6?0:atoi(argv[5]);
+	int iwidth = atoi(argv[2]), iheight = atoi(argv[3]);
+	double scale = argc < 5 ? 1.0 : strtod(argv[4], &_);
 	uint32_t *image = (uint32_t *)malloc(iwidth*iheight*sizeof(uint32_t));
 
-#if SAFE
-	uint32_t *oldimage = image;
-	image = (uint32_t *)malloc(4*iwidth*(iheight+1));
-	memset(image, 0, 4*iwidth);
-	image += iwidth;
-	memcpy(image, oldimage, 4*iwidth*iheight);
-	free(oldimage);
-#endif
-
-#if PREFLIP
-	for(int y = 0; y < iheight/2; y++) {
-		for(int x = 0; x < iwidth; x++) {
-			int c = x+y*iwidth;
-			int c2 = x+(iheight-y-1)*iwidth;
-			uint32_t temp = image[c];
-			image[c] = image[c2];
-			image[c2] = temp;
-		}
-	}
-#endif
+	double mx = double(iwidth)/2, my = double(iheight)/2;
 
 	for(int y = 0; y < iheight; y++) {
 		for(int x = 0; x < iwidth; x++) {
 			int c = x+y*iwidth;
 			unsigned char *color = (unsigned char *)&image[c];
-			unsigned char basic = arc4random_uniform(256);
 
-			for (int ch = 0; ch < 3; ch++) {
-				if (randmask&(1<<ch))
-					color[ch] = arc4random_uniform(256);
-				else if (blackmask&(1<<ch))
-					color[ch] = basic;
-				else
-					color[ch] = 0;
-			}
+			double ox = (x - mx) * scale, oy = (y - my) * scale;
+			
+			color[0] = gray(std::max(fabs(ox / mx), fabs(oy / my)));
+			color[1] = gray(fabs(ox / mx) + fabs(oy / my));
+			color[2] = gray(sqrt(sqr(ox / mx) + sqr(oy / my)));
+
+			//color[2] = color[1] = color[0];
+
 			color[3] = 255;
 		}
 	}
