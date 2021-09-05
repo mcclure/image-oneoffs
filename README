@@ -1,6 +1,4 @@
-Tool converts the red channel of a PNG into the alpha channel of the same PNG. Color channels in the output file will be filled with a single color; specify which one with the "fillcolor" argument.
-
-Comments in source file may be inaccurate. 
+Tool takes an input PNG or JPEG which is assumed to be a "filmstrip" style sprite sheet consisting of many equal-width frames in a single row. The tool then splits this single row up into multiple rows.
 
 To build:
 	make
@@ -9,7 +7,9 @@ To build for debugging:
 	make DEBUG=1
 
 Usage:
-	./badpng infile.png outfile.png fillcolor
+	./badpng infile.png outfile.png [outrows] [incols] [framewidth] [fillcolor]
+
+The "outrows" argument indicates how many rows the output is to be split into. If this is absent or 0, it is assumed to be 2. The "incols" argument indicates how many frames are present in the input file; this is only necessary if there are an odd number of frames.
 
 Written by Andi McClure <andi.m.mcclure@gmail.com>, http://runhello.com
 Available under the Creative Commons Zero license:

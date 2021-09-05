@@ -8,68 +8,83 @@ unsigned char *stbi_load(char const *filename, int *x, int *y, int *comp, int re
 extern int stbi_write_png(char const *filename, int w, int h, int comp, const void *data, int stride_in_bytes, int yflip);
 }
 
-// This program recreates a botched attempt to write a PNG exporter that flipped the Y axis as it encoded.
-// The attempt failed because the PNG encoder was using a form of compression where colors were stored
-// with values relative to their neighbors, but the flipping was confusing the notion of "neighbors".
-// To produce the effect, we take three steps:
+// Set 1 to glitch
+#define BADPNG 0
 
-// 1. Pad the image with one row of black pixels, since the glitched encoder commits a memory access violation.
-#define SAFE 0
-
-// 2. Manually reverse the order of the pixel rows, so the flipped image looks right side up.
-#define PREFLIP 0
-
-// 3. Instruct the encoder to run its broken y-flip routine.
-#define YFLIP 0
+template <class T>
+T divideCeiling(T x, T y) {
+	return x / y + (x%y ? 1 : 0);
+}
 
 int main (int argc, const char * argv[]) {
     if (argc < 3) {
-		fprintf(stderr, "Usage:\n\t%s infile.png outfile.png fillcolor\n", argv[0]);
+		fprintf(stderr, "Usage:\n\t%s infile.png outfile.png [outrows] [incols] [framewidth] [fillcolor]\n", argv[0]);
 		return 1;
 	}
 	
 	int iwidth, iheight;
 	uint32_t *image = (uint32_t *)stbi_load(argv[1], &iwidth, &iheight, NULL, 4);
-	int fillcolor = argc > 3 ? atoi(argv[3]) : 0;
-
 	if (!image) {
-		fprintf(stderr, "Could not open image %s\n", argv[1]);
+		fprintf(stderr, "Error: Could not open image %s\n", argv[1]);
 		return 1;
 	}
 
-#if SAFE
-	uint32_t *oldimage = image;
-	image = (uint32_t *)malloc(4*iwidth*(iheight+1));
-	memset(image, 0, 4*iwidth);
-	image += iwidth;
-	memcpy(image, oldimage, 4*iwidth*iheight);
-	free(oldimage);
-#endif
+	// Frame size arguments
+	int outrows = argc > 3 ? atoi(argv[3]) : 0;
+	int incols = argc > 4 ? atoi(argv[4]) : 0;
+	int framewidth = argc > 5 ? atoi(argv[5]) : 0;
+	if (!outrows) outrows = 2;
+	if (!framewidth) framewidth = incols ? iwidth / incols : 1;
+	if (!incols) incols = iwidth/framewidth;
 
-#if PREFLIP
-	for(int y = 0; y < iheight/2; y++) {
-		for(int x = 0; x < iwidth; x++) {
-			int c = x+y*iwidth;
-			int c2 = x+(iheight-y-1)*iwidth;
-			uint32_t temp = image[c];
-			image[c] = image[c2];
-			image[c2] = temp;
-		}
+	if (incols * framewidth > iwidth) {
+		fprintf(stderr, "Error: in-columns (%d) * frame-width (%d) was wider than the image (%d)\n", incols, framewidth, iwidth);
+		return 1;
 	}
-#endif
 
-	for(int y = 0; y < iheight; y++) {
-		for(int x = 0; x < iwidth; x++) {
-			int c = x+y*iwidth;
-			unsigned char *color = (unsigned char *)&image[c];
-			//printf("%d %d %d %d\n", color[0], color[1], color[2], color[3]);
-			color[3] = color[0];
-			for (int ch = 0; ch < 3; ch++)
-				color[ch] = fillcolor;
+	// Empty-space color argument
+	uint32_t fillcolor = 0;
+	if (argc > 6) {
+		char *endptr = 0;
+		fillcolor = strtoul(argv[6], &endptr, 16);
+		if (*endptr) {
+			fprintf(stderr, "Error: Could not interpret fillcolor (%s) as a hex number (confused at char %d)\n", argv[6], (int)(endptr-argv[6]));
+			return 1;
 		}
 	}
 
-	stbi_write_png(argv[2], iwidth, iheight, 4, &image[0], 4*iwidth, YFLIP);
+	// Do actual work
+	int outcols = divideCeiling(incols, outrows);
+	int owidth = framewidth*outcols;
+	int oheight = outrows*iheight;
+
+	uint32_t *outimage = (uint32_t *)malloc(owidth*oheight*sizeof(uint32_t));
+
+	for(int col = 0; col < outcols; col++) { // Iterate over each cel
+		for(int row = 0; row < outrows; row++) {
+			for(int y = 0; y < iheight; y++) { // Iterate over cel contents
+				for(int x = 0; x < framewidth; x++) {
+					int outidx = (row*iheight + y)*owidth + col*framewidth + x;
+					unsigned char *outcolor = (unsigned char *)&outimage[outidx];
+					int incol = row*outcols+col;
+					if (row*outcols+col < incols) { // For odd # of frames, may be extra space
+						//printf("%d %d %d %d\n", color[0], color[1], color[2], color[3]);
+						int inidx = y*iwidth + incol*framewidth + x;
+						unsigned char *incolor = (unsigned char *)&image[inidx];
+						for (int ch = 0; ch < 4; ch++)
+							outcolor[ch] = incolor[ch];
+					} else {
+						outcolor[3] = fillcolor & 0xFF;
+						outcolor[2] = (fillcolor >> 8) & 0xFF;
+						outcolor[1] = (fillcolor >> 16) & 0xFF;
+						outcolor[0] = (fillcolor >> 24) & 0xFF;
+					}
+				}
+			}
+		}
+	}
+
+	stbi_write_png(argv[2], owidth, oheight, 4, &outimage[0], 4*owidth, BADPNG);
 	
 	return 0;
 }
