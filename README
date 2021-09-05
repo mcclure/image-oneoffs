@@ -1,4 +1,6 @@
-Tool incorrectly re-encodes a PNG.
+This is a standalone image-generation tool. I don't remember what it does.
+
+Comments in source file may be inaccurate. 
 
 To build:
 	make

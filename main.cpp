@@ -57,9 +57,9 @@ int main (int argc, const char * argv[]) {
 
 			double ox = (x - mx) * scale, oy = (y - my) * scale;
 			
-			color[0] = gray(std::max(fabs(ox / mx), fabs(oy / my)));
-			color[1] = gray(fabs(ox / mx) + fabs(oy / my));
-			color[2] = gray(sqrt(sqr(ox / mx) + sqr(oy / my)));
+			color[0] = gray( std::max(fabs(ox / mx), fabs(oy / my)) );
+			color[1] = gray( (fabs(ox / mx) + fabs(oy / my)) / 2);
+			color[2] = gray( (sqrt(sqr(ox / mx) + sqr(oy / my))) / sqrt(2.0) );
 
 			//color[2] = color[1] = color[0];
 
