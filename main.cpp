@@ -60,6 +60,11 @@ int main (int argc, const char * argv[]) {
 
 	uint32_t *outimage = (uint32_t *)malloc(owidth*oheight*sizeof(uint32_t));
 
+	if (framewidth == 1)
+		printf("split across %d rows\nfinal image %d x %d\n", outrows, owidth, oheight);
+	else
+		printf("%d frames split across %d rows\n%d frames per row\neach frame %d x %d\nfinal image %d x %d\n", incols, outrows, outcols, framewidth, iheight, owidth, oheight);
+
 	for(int col = 0; col < outcols; col++) { // Iterate over each cel
 		for(int row = 0; row < outrows; row++) {
 			for(int y = 0; y < iheight; y++) { // Iterate over cel contents

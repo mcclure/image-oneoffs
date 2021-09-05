@@ -9,7 +9,11 @@ To build for debugging:
 Usage:
 	./badpng infile.png outfile.png [outrows] [incols] [framewidth] [fillcolor]
 
-The "outrows" argument indicates how many rows the output is to be split into. If this is absent or 0, it is assumed to be 2. The "incols" argument indicates how many frames are present in the input file; this is only necessary if there are an odd number of frames.
+There are several optional arguments:
+* `outrows` is the number of rows to split into (if missing or 0, will be assumed 2)
+* `incols` indicates how many frames are present in the input file; this is only necessary if there are an odd number of frames. If missing or 0, it will just split evenly down the middle.
+* `framewidth` indicates how wide each frame is; this is only necessary if there is blank space at the end (or if there are an odd number of frames it can be used in place of incols). If missing or 0, it will (again) split things evenly down the middle.
+* `fillcolor` is an RGBA hex color (like, 0 for transparent black, 000000FF for visible black, FFFFFF00 for transparent white, FFFFFFFF for visible white, 00FF00FF for visible green, etc). If there is blank space at the end (IE if there are an odd number of frames) the blank space will be filled with this color. If missing, transparent black will be assumed.
 
 Written by Andi McClure <andi.m.mcclure@gmail.com>, http://runhello.com
 Available under the Creative Commons Zero license:
