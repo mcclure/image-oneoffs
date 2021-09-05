@@ -1,4 +1,6 @@
-Tool incorrectly re-encodes a PNG.
+Tool generates a randomly colored image of given size. Arguments control which channels are random and which non-random channels are "black" or "white".
+
+Comments in source file may be inaccurate.
 
 To build:
 	make
@@ -7,9 +9,10 @@ To build for debugging:
 	make DEBUG=1
 
 Usage:
-	./badpng infile.png outfile.png
+	./badpng outfile.png x y randmask blackmask
 
 Written by Andi McClure <andi.m.mcclure@gmail.com>, http://runhello.com
 Available under the Creative Commons Zero license:
 http://creativecommons.org/publicdomain/zero/1.0/legalcode.txt
 In other words, the source code in this repository may be used for any purpose without restriction.
+If you wind up copying the code in its entirety and changing nothing, please retain a credit somewhere to Andi McClure. This is not a legal requirement. It would just be polite.
